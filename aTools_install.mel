@@ -23,7 +23,7 @@ def hasInternet(url):\n\
    return False\n\
 \n\
 def launchInstall():\n\
-    INSTALL_URL = 'http://www.trickorscript.com/aTools/aToolsInstall.py' \n\
+    INSTALL_URL = 'https://raw.githubusercontent.com/MKlimenko/aTools_python3/master/aToolsInstall.py' \n\
     aToolsInstall = None\n\
     if hasInternet(INSTALL_URL):\n\
 	    try: \n\
