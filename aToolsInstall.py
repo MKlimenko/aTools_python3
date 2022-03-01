@@ -51,7 +51,7 @@ def aToolsInstall():
     aToolsPath      = mayaAppDir + os.sep + "scripts"
     aToolsFolder    = aToolsPath + os.sep + "aTools" + os.sep
     tmpZipFile      = "%s%stmp.zip"%(aToolsPath, os.sep)    
-    DOWNLOAD_URL    = "http://www.trickorscript.com/aTools/aTools.zip"
+    DOWNLOAD_URL    = "https://github.com/MKlimenko/aTools_python3/releases/download/v2.03/aTools.zip"
         
     if os.path.isfile(tmpZipFile):     os.remove(tmpZipFile)   
     if os.path.isdir(aToolsFolder): shutil.rmtree(aToolsFolder)      
