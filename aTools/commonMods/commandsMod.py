@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -99,12 +100,12 @@ def togglePanelLayout():
     currLayout  = getCurrentPanelLayout()
     
     licycle     = cycle(layouts)
-    nextItem    = licycle.next()
+    nextItem    = next(licycle)
 
     for loopItem in layouts:
-        nextItem = licycle.next()
+        nextItem = next(licycle)
         if nextItem == currLayout: 
-            nextItem = licycle.next()
+            nextItem = next(licycle)
             break
         
     setPanelLayout(nextItem)
@@ -363,7 +364,7 @@ def setThreePanelLayout():
              "lookThroughModelPanel persp modelPanel4;")
              #"scriptedPanel -e -rp modelPanel2 graphEditor1;")
     viewports = [view for view in cmds.getPanel(type='modelPanel') if view in cmds.getPanel(visiblePanels=True)]
-    defaultCameras = [u'front', u'persp', u'side', u'top']
+    defaultCameras = ['front', 'persp', 'side', 'top']
     
     for view in viewports:
         camera          = utilMod.getCamFromSelection([cmds.modelEditor(view, query=True, camera=True)])

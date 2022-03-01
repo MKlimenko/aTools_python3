@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -52,7 +53,7 @@ class Tangents(object):
         
     def populateMenu(self, menu, button, *args):
 
-        print "menu, button, *args", menu, button, args
+        print(("menu, button, *args", menu, button, args))
         
         
         if button != "step":
@@ -88,7 +89,7 @@ class Tangents(object):
             
             #expand selection
             for n, loopCurve in enumerate(index):
-                for x in xrange(frames):
+                for x in range(frames):
                     if loopCurve[0] >= 1:
                         loopCurve.insert(0, loopCurve[0]-1)
                     if loopCurve[-1] < indexTimes[n][-1]:
@@ -436,7 +437,7 @@ class Tangents(object):
                 return "Zero"
         else:
             index += 2
-            for x in xrange(2):
+            for x in range(2):
                 keyValTmp.insert(0, keyValTmp[0])
                 keyValTmp.append(keyValTmp[-1])  
             
@@ -594,7 +595,7 @@ class Tangents(object):
                 inOut = "out"
                 
                 
-            for x in xrange(5):   
+            for x in range(5):   
                 currVal   = keyVal[index] 
                 nextVal   = keyVal[index+1]      
                 #get in values for next key

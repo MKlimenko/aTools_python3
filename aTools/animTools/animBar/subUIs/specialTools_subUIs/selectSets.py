@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -145,7 +146,7 @@ class SelectSets(object):
         
         selSetsSel.extend(self.getSelectedSets())
           
-        for loopSet in self.aToolsSetsDict.keys():
+        for loopSet in list(self.aToolsSetsDict.keys()):
             newSelSet = self.createSelSetIfInexistent(loopSet, self.aToolsSetsDict[loopSet])
             
             if not newSelSet: continue            
@@ -173,7 +174,7 @@ class SelectSets(object):
         
         #print "checkIfElementsDeleted"
         
-        if not self.aToolsSetsDict.has_key(selSet): return
+        if selSet not in self.aToolsSetsDict: return
         
         selSetContents  = cmds.sets(selSet, query=True, nodesOnly=True)
         dictContents    = self.aToolsSetsDict[selSet]    
@@ -522,7 +523,7 @@ class SelectSets(object):
             cmds.iconTextButton('aToolsSetBtn_%s'%loopSet, edit=True, parent=self.limboLayout)
             cmds.iconTextButton('aToolsSetBtn_%s'%loopSet, edit=True, parent=self.selSetsLayout, visible=True) 
             
-            if self.selSetButtonWidth.has_key(loopSet): cmds.iconTextButton('aToolsSetBtn_%s'%loopSet, edit=True, w=self.selSetButtonWidth[loopSet]) 
+            if loopSet in self.selSetButtonWidth: cmds.iconTextButton('aToolsSetBtn_%s'%loopSet, edit=True, w=self.selSetButtonWidth[loopSet]) 
                 
         
     def adjustButtonsWidth(self):    
@@ -537,7 +538,7 @@ class SelectSets(object):
     def resetButtonsWidth(self, buttonSets):        
         
         for n, loopSet in enumerate(buttonSets):
-            if self.selSetButtonWidth.has_key(loopSet): cmds.iconTextButton('aToolsSetBtn_%s'%loopSet, edit=True, w=self.selSetButtonWidth[loopSet])
+            if loopSet in self.selSetButtonWidth: cmds.iconTextButton('aToolsSetBtn_%s'%loopSet, edit=True, w=self.selSetButtonWidth[loopSet])
         
     def stretchButtonsWidth(self, buttonSets):
         
@@ -908,7 +909,7 @@ class SelectSets(object):
         if len(sel) == 0: return 
         selSet = self.createSelSetIfInexistent(selSet, sel)
         cmds.sets(sel, edit=True, addElement=selSet)
-        if not self.aToolsSetsDict.has_key(selSet): self.aToolsSetsDict[selSet] = []
+        if selSet not in self.aToolsSetsDict: self.aToolsSetsDict[selSet] = []
         for loopSel in sel: 
             if loopSel not in self.aToolsSetsDict[selSet]: self.aToolsSetsDict[selSet].append(loopSel) 
         self.blinkButton(selSet, 1)
@@ -921,7 +922,7 @@ class SelectSets(object):
         if len(sel) == 0: return 
         selSet = self.createSelSetIfInexistent(selSet, sel)
         cmds.sets(sel, edit=True, remove=selSet)   
-        if not self.aToolsSetsDict.has_key(selSet): self.aToolsSetsDict[selSet] = [] 
+        if selSet not in self.aToolsSetsDict: self.aToolsSetsDict[selSet] = [] 
         for loopSel in sel:
             if loopSel in self.aToolsSetsDict[selSet]: self.aToolsSetsDict[selSet].remove(loopSel)
         self.blinkButton(selSet, 1)

@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -15,22 +16,23 @@ To unistall aTools, go to menu (the last button on the right), Uninstall
 ''' 
 
 # maya modulesspecialTools
+import importlib
 from maya import cmds
 from aTools.generalTools.aToolsGlobals import aToolsGlobals as G
-from aTools.generalTools        import aToolsClasses;               reload(aToolsClasses)
-from aTools.commonMods          import animMod;                     reload(animMod)
-from aTools.generalTools        import generalToolsUI;              reload(generalToolsUI)
-from aTools.commonMods          import utilMod;                     reload(utilMod)
-from aTools.commonMods          import commandsMod;                 reload(commandsMod)
-from aTools.commonMods          import aToolsMod;                   reload(aToolsMod)
-from aTools                     import setup;                       reload(setup)        
+from aTools.generalTools        import aToolsClasses;               importlib.reload(aToolsClasses)
+from aTools.commonMods          import animMod;                     importlib.reload(animMod)
+from aTools.generalTools        import generalToolsUI;              importlib.reload(generalToolsUI)
+from aTools.commonMods          import utilMod;                     importlib.reload(utilMod)
+from aTools.commonMods          import commandsMod;                 importlib.reload(commandsMod)
+from aTools.commonMods          import aToolsMod;                   importlib.reload(aToolsMod)
+from aTools                     import setup;                       importlib.reload(setup)        
 
 # constants
 SUB_UI_MODS   = ["tweenMachine", "keyTransform", "tangents", "specialTools", "tUtilities"]
 
 # import subUI modules
 for loopMod in SUB_UI_MODS:
-    exec("import aTools.animTools.animBar.subUIs.%s as %s; reload(%s)"%(loopMod, loopMod, loopMod))
+    exec("import aTools.animTools.animBar.subUIs.%s as %s; importlib.reload(%s)"%(loopMod, loopMod, loopMod))
 
 
 def show(mode="show"):
@@ -102,7 +104,7 @@ class AnimationBar_Gui(object):
        
     def start(self):
         
-        from aTools.generalTools import aToolsClasses;  reload(aToolsClasses)
+        from aTools.generalTools import aToolsClasses;  importlib.reload(aToolsClasses)
         self.startUpFunctions()
         self.delWindows()
         self.createWin()

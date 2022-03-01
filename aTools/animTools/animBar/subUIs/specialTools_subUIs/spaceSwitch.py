@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -46,7 +47,7 @@ class SpaceSwitch(object):
                 for loopChannel in loopObjectChannel:
                     tokens = animMod.getTokens(obj, loopChannel)
                     if tokens and len(tokens) > 1: 
-                        if not channelList.has_key(loopChannel): channelList[loopChannel] = {"objects":[], "tokens":[]}
+                        if loopChannel not in channelList: channelList[loopChannel] = {"objects":[], "tokens":[]}
                         channelList[loopChannel]["objects"].append(obj)
                         channelList[loopChannel]["tokens"].append(tokens)
                         

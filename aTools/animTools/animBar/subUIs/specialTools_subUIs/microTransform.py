@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -128,7 +129,7 @@ class MicroTransform(object):
             
             if str(val) != str(mtValue):
                 #timer
-                if not self.microTransformStartTimer.has_key("%s"%nodeName): 
+                if "%s"%nodeName not in self.microTransformStartTimer: 
                     self.microTransformStartTimer["%s"%nodeName]    = cmds.timerX()
                 microTransformTimer                                 = cmds.timerX(startTime=self.microTransformStartTimer["%s"%nodeName])
                 self.microTransformStartTimer["%s"%nodeName]        = cmds.timerX()

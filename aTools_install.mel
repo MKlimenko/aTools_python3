@@ -1,7 +1,8 @@
 // ========================================================================================================================
 // Author: Alan Camilo
 // www.alancamilo.com
-// 
+// Modified: Michael Klimenko
+//
 // Requirements: aTools Package
 // 
 // ------------------------------------------------------------------------------------------------------------------------
@@ -16,16 +17,9 @@ python("\n\
 #aTools_install.mel\n\
 \n\
 from maya import cmds, mel\n\
-import os, shutil, urllib2, shutil, zipfile\n\
+import os, shutil, urllib.request, urllib.error, urllib.parse, shutil, zipfile, importlib\n\
 \n\
 def hasInternet(url):\n\
-   try:\n\
-       proxy    = urllib2.ProxyHandler({})\n\
-       opener   = urllib2.build_opener(proxy)\n\
-       urllib2.install_opener(opener)\n\
-       response = urllib2.urlopen(url, timeout=60)\n\
-       return True\n\
-   except: pass\n\
    return False\n\
 \n\
 def launchInstall():\n\
@@ -33,7 +27,7 @@ def launchInstall():\n\
     aToolsInstall = None\n\
     if hasInternet(INSTALL_URL):\n\
 	    try: \n\
-	        aToolsInstall = urllib2.urlopen(INSTALL_URL, timeout=60).read()\n\
+	        aToolsInstall = urllib.request.urlopen(INSTALL_URL, timeout=60).read()\n\
 	    except IOError: pass\n\
     if aToolsInstall: exec(aToolsInstall)\n\
     else: \n\
@@ -99,14 +93,14 @@ def formatPath(path):\n\
 \n\
 def download(downloadUrl, saveFile):\n\
         \n\
-    try:    response        = urllib2.urlopen(downloadUrl, timeout=60)          \n\
+    try:    response        = urllib.request.urlopen(downloadUrl, timeout=60)          \n\
     except: pass\n\
     \n\
     if response is None: \n\
         cmds.warning('Error trying to install.')\n\
         return    \n\
     \n\
-    fileSize        = int(response.info().getheaders('Content-Length')[0])\n\
+    fileSize        = int(response.info().get('Content-Length')[0])\n\
     fileSizeDl      = 0\n\
     blockSize       = 128\n\
     output          = open(saveFile,'wb')    \n\
@@ -165,9 +159,9 @@ def aToolsOfflineInstall(offlineFilePath):\n\
         \n\
     zfobj.close()\n\
     if os.path.isfile(tmpZipFile):     os.remove(tmpZipFile)\n\
-    from aTools import setup; reload(setup); setup.install([offlineFilePath, True]) \n\
+    from aTools import setup; importlib.reload(setup); setup.install([offlineFilePath, True]) \n\
     cmds.confirmDialog(message=\'A file aTools_offline_install.mel has been created in the same aTools.zip location. If other people in your network are installing aTools, just ask them to drag\\'n drop this file into Maya\\'s viewport.\')\n\
-    cmds.evalDeferred(\"from aTools.animTools.animBar import animBarUI; reload(animBarUI); animBarUI.show(\\'refresh\\')\")     \n\
+    cmds.evalDeferred(\"from aTools.animTools.animBar import animBarUI; importlib.reload(animBarUI); animBarUI.show(\\'refresh\\')\")     \n\
 \n\
 \n\
 launchInstall()\n\

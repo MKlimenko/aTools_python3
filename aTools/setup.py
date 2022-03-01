@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -19,6 +20,7 @@ from maya import mel
 from aTools.generalTools.aToolsGlobals import aToolsGlobals as G
 from aTools.commonMods import utilMod
 from aTools.commonMods import aToolsMod
+import importlib
 
 def install(offline=None, unistall=False):    
        
@@ -71,7 +73,7 @@ def install(offline=None, unistall=False):
     
     #open tool
     if not unistall:
-        from aTools.animTools.animBar import animBarUI; reload(animBarUI)
+        from aTools.animTools.animBar import animBarUI; importlib.reload(animBarUI)
         animBarUI.show()
     
         

@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -137,7 +138,7 @@ def getTarget(target, animCurves=None, getFrom=None, rangeAll=None):
             
             for node in animCurves:
                 if not cmds.objExists(node): continue
-                for n in xrange(100): # find transform node (obj) and attribute name
+                for n in range(100): # find transform node (obj) and attribute name
                     obj  = None
                     attr = None
                     type = "animBlendNodeEnum"

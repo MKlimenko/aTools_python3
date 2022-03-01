@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -20,7 +21,7 @@ from maya import mel
 import os
 import copy
 import webbrowser
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 
 from maya       import OpenMaya
 from datetime   import datetime, timedelta
@@ -68,7 +69,7 @@ def animViewportViewMode(panelName=None):
     cmds.modelEditor(panelName, edit=True, displayLights="default", selectionHiliteDisplay=True)
 
 def getAllCameras():
-    defaultCameras  = [u'frontShape', u'perspShape', u'sideShape', u'topShape']
+    defaultCameras  = ['frontShape', 'perspShape', 'sideShape', 'topShape']
     cameras         = [cam for cam in cmds.ls(cameras=True) if cam not in defaultCameras]  
     return cameras 
 
@@ -77,7 +78,7 @@ def download(progBar, downloadUrl, saveFile):
     response = None
  
     try:
-        response        = urllib2.urlopen(downloadUrl, timeout=60)            
+        response        = urllib.request.urlopen(downloadUrl, timeout=60)            
     except:
         pass
     
@@ -142,7 +143,7 @@ def timer(mode="l", function=""):
         except:
             pass
             
-        print G.UM_timerMessage
+        print((G.UM_timerMessage))
             
         #cmds.timer( startTimer=True)
         #print (cmds.timer( endTimer=True))
@@ -176,7 +177,7 @@ def mergeLists(lists):
     return mergedList
 
 def listIntersection(list, sublist):    
-    return filter(set(list).__contains__, sublist)
+    return list(filter(set(list).__contains__, sublist))
 
     
 
@@ -212,7 +213,7 @@ def makeDir(directory):
         try:
             os.makedirs(directory) 
         except:
-            print "Was not able to create folder: %s"%directory
+            print(("Was not able to create folder: %s"%directory))
         
 
     
@@ -283,7 +284,7 @@ def writeFile(filePath, contents):
         output.write(contentString)
         output.close()
     except:
-        print "aTools - Error writing file: %s"%filePath
+        print(("aTools - Error writing file: %s"%filePath))
 
 def readFile(filePath):   
     
@@ -417,7 +418,7 @@ def isAffected(nodeAffected, nodeDriver):
     steps1to4.update(step4)
     step5=set(steps1to4)
     step5.update(cmds.listHistory(list(steps1to4)))
-    print step5        
+    print(step5)        
             
             
 def getMObject(objectName):
@@ -509,10 +510,10 @@ def checkScriptJobEvents(onOff=True):
     
 def hasInternet(url):
    try:
-       proxy    = urllib2.ProxyHandler({})
-       opener   = urllib2.build_opener(proxy)
-       urllib2.install_opener(opener)
-       response = urllib2.urlopen(url, timeout=60)
+       proxy    = urllib.request.ProxyHandler({})
+       opener   = urllib.request.build_opener(proxy)
+       urllib.request.install_opener(opener)
+       response = urllib.request.urlopen(url, timeout=60)
        return True
    except: pass
    return False
@@ -534,7 +535,7 @@ def transferAttributes(fromNode, toNode):
         try: fromAttrs[loopAttr] = cmds.getAttr("%s.%s"%(fromNode, loopAttr))
         except: pass
 
-    for loopAttr in fromAttrs.keys():
+    for loopAttr in list(fromAttrs.keys()):
         value    = fromAttrs[loopAttr]
         
         try: cmds.setAttr("%s.%s"%(toNode, loopAttr), value)

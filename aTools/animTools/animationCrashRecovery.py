@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -479,7 +480,7 @@ class AnimationCrashRecovery(object):
         if self.pause: return   
         
         curveMsg = args[0]
-        curves  = [OpenMaya.MFnDependencyNode(curveMsg[n]).name() for n in xrange(curveMsg.length())]
+        curves  = [OpenMaya.MFnDependencyNode(curveMsg[n]).name() for n in range(curveMsg.length())]
         
         
         function = lambda *args:self.sendDataToSaveDeferred(curves, [])
@@ -603,9 +604,9 @@ class AnimationCrashRecovery(object):
         
         if animData is None: return
         
-        if not self.animCurvesInfo.has_key(sceneId): self.animCurvesInfo[sceneId] = {}
+        if sceneId not in self.animCurvesInfo: self.animCurvesInfo[sceneId] = {}
         
-        if self.animCurvesInfo[sceneId].has_key(curveStr):
+        if curveStr in self.animCurvesInfo[sceneId]:
             if self.animCurvesInfo[sceneId][curveStr] == animData: return
         
         self.animCurvesInfo[sceneId][curveStr] = animData                
@@ -647,9 +648,9 @@ class AnimationCrashRecovery(object):
         
         if attrData is None: return
         
-        if not self.nonKeyedAttrInfo.has_key(sceneId): self.nonKeyedAttrInfo[sceneId] = {}
+        if sceneId not in self.nonKeyedAttrInfo: self.nonKeyedAttrInfo[sceneId] = {}
         
-        if self.nonKeyedAttrInfo[sceneId].has_key(nonKeyedAttrsStr):
+        if nonKeyedAttrsStr in self.nonKeyedAttrInfo[sceneId]:
             if self.nonKeyedAttrInfo[sceneId][nonKeyedAttrsStr] == attrData: return
         
         self.nonKeyedAttrInfo[sceneId][nonKeyedAttrsStr]   = attrData      
@@ -756,7 +757,7 @@ class AnimationCrashRecovery(object):
         
         crashLog        = self.loadCrashLog()
 
-        if crashLog and crashLog.has_key("crashFilePath"):    self.warnCrashLog(crashLog)
+        if crashLog and "crashFilePath" in crashLog:    self.warnCrashLog(crashLog)
     
     def saveCrashLog(self, crashFilePath, beforeCrashPath, beforeCrashName):
         
@@ -821,7 +822,7 @@ class AnimationCrashRecovery(object):
         if nodeType in ["animCurveTA","animCurveTL","animCurveTT","animCurveTU"]:
             return
         
-        print "nodeCreated", nodeCreated, nodeType
+        print(("nodeCreated", nodeCreated, nodeType))
         
         if nodeCreated not in self.nodesCreated: self.nodesCreated.append(nodeCreated)
         
@@ -846,7 +847,7 @@ class AnimationCrashRecovery(object):
         
         #if firstObj not in self.nodesCreated: self.nodesCreated.append(firstObj)
         
-        print "parented", firstObj, secondObj
+        print(("parented", firstObj, secondObj))
          
         self.recommendSaving(True)
         self.removeMdgMessages()  

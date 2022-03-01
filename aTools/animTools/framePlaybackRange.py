@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -17,6 +18,7 @@ To unistall aTools, go to menu (the last button on the right), Uninstall
 from maya import cmds
 from aTools.generalTools.aToolsGlobals import aToolsGlobals as G
 from aTools.commonMods import utilMod
+import importlib
 
 def toggleframePlaybackRange(onOff):
     utilMod.killScriptJobs("G.framePlaybackRangeScriptJobs")
@@ -67,7 +69,7 @@ def getMinMax(rangeStart=None, rangeEnd=None):
 
 def framePlaybackRangeFn(rangeStart=None, rangeEnd=None): 
     
-    from aTools.commonMods import animMod; reload(animMod)
+    from aTools.commonMods import animMod; importlib.reload(animMod)
     animMod.filterNonAnimatedCurves()
     
     if not rangeStart:

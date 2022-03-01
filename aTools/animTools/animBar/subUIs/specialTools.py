@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -13,19 +14,20 @@ To unistall aTools, go to menu (the last button on the right), Uninstall
 
 ========================================================================================================================
 ''' 
+import importlib
 import os
 from maya import cmds
 from maya import mel
 from aTools.generalTools.aToolsGlobals import aToolsGlobals as G
-from aTools.commonMods import uiMod;   reload(uiMod)
-from aTools.commonMods import utilMod; reload(utilMod)
-from aTools.commonMods import animMod; reload(animMod)
+from aTools.commonMods import uiMod;   importlib.reload(uiMod)
+from aTools.commonMods import utilMod; importlib.reload(utilMod)
+from aTools.commonMods import animMod; importlib.reload(animMod)
 
-MODULES = ["align","selectSets","mirror","spaceSwitch","tempCustomPivot","animationCopier","fakeConstrain","motionTrail", "microTransform", "transformAll"]
+MODULES = ["align","selectSets","mirror","spaceSwitch","tempCustomPivot","animationCopier","fakeConstrain", "microTransform", "transformAll"]
 
 # import subUI modules
 for loopMod in MODULES:
-    exec("from aTools.animTools.animBar.subUIs.specialTools_subUIs import %s; reload(%s)"%(loopMod, loopMod))
+    exec("from aTools.animTools.animBar.subUIs.specialTools_subUIs import %s; importlib.reload(%s)"%(loopMod, loopMod))
 
 
 class SpecialTools_Gui(uiMod.BaseSubUI):
@@ -69,11 +71,12 @@ class SpecialTools_Gui(uiMod.BaseSubUI):
         cmds.iconTextButton("fakeConstrainBtn", style='iconAndTextVertical', image= uiMod.getImagePath("specialTools_fake_constrain"), highlightImage= uiMod.getImagePath("specialTools_fake_constrain copy"), w=self.wb, h=self.hb, command=FakeConstrain.copyPaste,        annotation="Fake Constrain\nClick once to copy objects position relative to the last selected\nGo to another frame or select a range and click again to paste\nChanging the current selection will flush the copy cache\n\nRight click for options")
         FakeConstrain.popupMenu()
  
-        #MOTION TRAIL
-        MotionTrail = motionTrail.MotionTrail()
-        MotionTrail.toolBarButton  = cmds.iconTextButton("motionTrailBtn", style='iconAndTextVertical', image= uiMod.getImagePath("specialTools_motion_trail"),   highlightImage= uiMod.getImagePath("specialTools_motion_trail copy"),    w=self.wb, h=self.hb, command=MotionTrail.switch,          annotation="Motion trail\nRight click for options")
-        MotionTrail.popupMenu()
-        #cmds.iconTextButton("motionTrailBtnOLD", style='iconAndTextVertical', image= uiMod.getImagePath("specialTools_motion_trail"),   highlightImage= uiMod.getImagePath("specialTools_motion_trail copy"),    w=self.wb, h=self.hb, command=self.motionTrail,          annotation="Motion trail")
+        # motion trail is disabled, please use the built-in
+        # #MOTION TRAIL
+        # MotionTrail = motionTrail.MotionTrail()
+        # MotionTrail.toolBarButton  = cmds.iconTextButton("motionTrailBtn", style='iconAndTextVertical', image= uiMod.getImagePath("specialTools_motion_trail"),   highlightImage= uiMod.getImagePath("specialTools_motion_trail copy"),    w=self.wb, h=self.hb, command=MotionTrail.switch,          annotation="Motion trail\nRight click for options")
+        # MotionTrail.popupMenu()
+        # #cmds.iconTextButton("motionTrailBtnOLD", style='iconAndTextVertical', image= uiMod.getImagePath("specialTools_motion_trail"),   highlightImage= uiMod.getImagePath("specialTools_motion_trail copy"),    w=self.wb, h=self.hb, command=self.motionTrail,          annotation="Motion trail")
         
         
         #MICRO TRANSFORM

@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -14,6 +15,14 @@ To unistall aTools, go to menu (the last button on the right), Uninstall
 ========================================================================================================================
 ''' 
 
+import importlib
+import sys
+import urllib.request, urllib.error, urllib.parse
+import shutil
+import zipfile
+import os
+import webbrowser
+
 from maya import cmds
 from maya import mel
 from maya import OpenMaya
@@ -25,18 +34,13 @@ from aTools.commonMods      import animMod
 from aTools.commonMods      import commandsMod
 from aTools.commonMods      import aToolsMod
 from aTools                 import setup
-from aTools.generalTools    import hotkeys;                     reload(hotkeys)
-from aTools.generalTools    import tumbleOnObjects;             reload(tumbleOnObjects)
-from aTools.animTools       import animationCrashRecovery;      reload(animationCrashRecovery)
-from aTools.animTools       import framePlaybackRange;          reload(framePlaybackRange)
-from aTools.animTools       import jumpToSelectedKey;           reload(jumpToSelectedKey)
+from aTools.generalTools    import hotkeys;                     importlib.reload(hotkeys)
+from aTools.generalTools    import tumbleOnObjects;             importlib.reload(tumbleOnObjects)
+from aTools.animTools       import animationCrashRecovery;      importlib.reload(animationCrashRecovery)
+from aTools.animTools       import framePlaybackRange;          importlib.reload(framePlaybackRange)
+from aTools.animTools       import jumpToSelectedKey;           importlib.reload(jumpToSelectedKey)
     
-import sys
-import urllib2
-import shutil
-import zipfile
-import os
-import webbrowser
+
 
 animationCrashRecovery  = animationCrashRecovery.AnimationCrashRecovery()
 tumbleOnObjects         = tumbleOnObjects.TumbleOnObjects()
@@ -259,7 +263,7 @@ class GeneralTools_Gui(uiMod.BaseSubUI):
     
         if confirm == 'Yes':      
         
-            from aTools.animTools.animBar import animBarUI; reload(animBarUI)
+            from aTools.animTools.animBar import animBarUI; importlib.reload(animBarUI)
             #aToolsPath          = aToolsMod.getaToolsPath(2) 
             aToolsFolder        = aToolsMod.getaToolsPath() 
              
@@ -298,14 +302,21 @@ class GeneralTools_Gui(uiMod.BaseSubUI):
         cmds.formLayout( form, edit=True, attachForm=[( object, 'top', pos), ( object, 'left', 80)] )
         #=========================================
         object = cmds.text( label="<a href=\"%s\">aTools website</a>"%SITE_URL, hyperlink=True)
-        cmds.formLayout( form, edit=True, attachForm=[( object, 'top', pos), ( object, 'left', 205)] )
+        cmds.formLayout( form, edit=True, attachForm=[( object, 'top', pos), ( object, 'left', 220)] )
         #=========================================
         pos += 15
         object = cmds.text( label="Author: Alan Camilo")
         cmds.formLayout( form, edit=True, attachForm=[( object, 'top', pos), ( object, 'left', 80)] )
         #=========================================
         object = cmds.text( label="<a href=\"http://www.alancamilo.com/\">www.alancamilo.com</a>", hyperlink=True)
-        cmds.formLayout( form, edit=True, attachForm=[( object, 'top', pos), ( object, 'left', 205)] )
+        cmds.formLayout( form, edit=True, attachForm=[( object, 'top', pos), ( object, 'left', 220)] )
+        #=========================================        pos += 15
+        pos += 15
+        object = cmds.text( label="Adaped: Michael Klimenko")
+        cmds.formLayout( form, edit=True, attachForm=[( object, 'top', pos), ( object, 'left', 80)] )
+        #=========================================
+        object = cmds.text( label="<a href=\"https://github.com/MKlimenko/\">My GitHub</a>", hyperlink=True)
+        cmds.formLayout( form, edit=True, attachForm=[( object, 'top', pos), ( object, 'left', 220)] )
         #=========================================
         
         
@@ -335,7 +346,7 @@ class GeneralTools_Gui(uiMod.BaseSubUI):
         cmds.formLayout( form, edit=True, attachForm=[( object, 'top', pos), ( object, 'left', 10)] )
         #=========================================
         
-        for x in xrange(WHATISNEW.count("\n")):
+        for x in range(WHATISNEW.count("\n")):
             pos += 13
         pos += 25
         
@@ -440,43 +451,6 @@ class Update(object):
     
        
     def hasUpdate(self):
-        
-        response = None 
-        
-        if utilMod.hasInternet(UPDATE_URL):        
-            try:    response = urllib2.urlopen(UPDATE_URL, timeout=60)
-            except: pass
-        
-        if response is None:
-            message         = "aTools warning: Internet connection not detected. Offline aTools.zip not detected. You are no longer up-to-date."
-            offlinePath     = aToolsMod.loadInfoWithUser("userPrefs", "offlinePath") 
-            if not offlinePath: 
-                cmds.warning(message)
-            else:
-                offlineFolder   = offlinePath[0]
-                offlineFilePath = "%s%saTools.zip"%(offlineFolder, os.sep)
-                if not os.path.isfile(offlineFilePath):                    
-                    cmds.warning(message)
-                    return False
-                  
-                fileModTime     = os.path.getmtime(offlineFilePath)
-                if str(fileModTime) != str(offlinePath[1]):
-                    return "offline_update"
-                
-            return False
-            
-        
-        try:
-            for line in response:
-                latestVersion = line
-                break
-            
-            if VERSION not in latestVersion:
-                return latestVersion
-            
-        except IOError:
-            pass
-        
         return False
     
     def warnUpdate(self):
@@ -675,7 +649,7 @@ class CommandsAndHotkeys(object):
         mainLayout      = cmds.columnLayout(adjustableColumn=True)
         columnsLayout   = cmds.rowColumnLayout(numberOfColumns=totalColums)
         
-        for loopColumn in xrange(totalColums):
+        for loopColumn in range(totalColums):
         
             parent = cmds.rowColumnLayout(numberOfColumns=7, columnSpacing=([2,5], [3,3], [4,3], [5,1], [6,5], [7,5]), parent=columnsLayout)
               
@@ -925,7 +899,7 @@ def refreshATools(*args):
     
 
 def refreshAToolsDef():
-    from aTools.animTools.animBar import animBarUI;     reload(animBarUI)
+    from aTools.animTools.animBar import animBarUI;     importlib.reload(animBarUI)
     animBarUI.show('refresh')
 
 

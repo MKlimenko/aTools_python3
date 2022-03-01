@@ -1,19 +1,20 @@
 from maya import cmds, mel
-import os, shutil, urllib2, shutil, zipfile
+import os, shutil, urllib.request, urllib.error, urllib.parse, shutil, zipfile
+import importlib
 
 def hasInternet(url):
    try:
-       proxy    = urllib2.ProxyHandler({})
-       opener   = urllib2.build_opener(proxy)
-       urllib2.install_opener(opener)
-       response = urllib2.urlopen(url, timeout=60)
+       proxy    = urllib.request.ProxyHandler({})
+       opener   = urllib.request.build_opener(proxy)
+       urllib.request.install_opener(opener)
+       response = urllib.request.urlopen(url, timeout=60)
        return True
    except: pass
    return False
 
 def install():
     if aToolsZipPath.split(os.sep)[-1] != 'aTools.zip' or not os.path.isfile(aToolsZipPath):
-        cmds.confirmDialog(message=\"%sCouldn\'t find aTools.zip in this location, installation will stop.\"%os.sep.join(aToolsZipPath.split(os.sep)[:-1]))
+        cmds.confirmDialog(message="%sCouldnt find aTools.zip in this location, installation will stop."%os.sep.join(aToolsZipPath.split(os.sep)[:-1]))
         return   
     aToolsOfflineInstall(aToolsZipPath)
 
@@ -28,7 +29,7 @@ def download(downloadUrl, saveFile):
         cmds.warning('Error trying to install.')
         return
         
-    try:    response        = urllib2.urlopen(downloadUrl, timeout=60)          
+    try:    response        = urllib.request.urlopen(downloadUrl, timeout=60)          
     except: pass
     
     if response is None: 
@@ -94,8 +95,8 @@ def aToolsOfflineInstall(offlineFilePath):
         
     zfobj.close()
     if os.path.isfile(tmpZipFile):     os.remove(tmpZipFile)
-    from aTools import setup; reload(setup); setup.install([offlineFilePath, False]) 
-    cmds.evalDeferred(\"from aTools.animTools.animBar import animBarUI; reload(animBarUI); animBarUI.show(\'refresh\')\")     
+    from aTools import setup; importlib.reload(setup); setup.install([offlineFilePath, False]) 
+    cmds.evalDeferred("from aTools.animTools.animBar import animBarUI; importlib.reload(animBarUI); animBarUI.show(\'refresh\')")     
 
 
 install()

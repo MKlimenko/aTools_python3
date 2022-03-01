@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -14,6 +15,7 @@ To unistall aTools, go to menu (the last button on the right), Uninstall
 ========================================================================================================================
 ''' 
 
+import importlib
 from maya import cmds
 from maya import mel
 from aTools.generalTools.aToolsGlobals import aToolsGlobals as G
@@ -22,8 +24,8 @@ from aTools.commonMods import utilMod;
 from aTools.commonMods import animMod;                  
 from aTools.commonMods import commandsMod;              
 from aTools.commonMods import aToolsMod
-from aTools.animTools.animBar.subUIs import tangents;   reload(tangents) 
-from aTools.animTools.animBar.subUIs.specialTools_subUIs import mirror;   reload(mirror) 
+from aTools.animTools.animBar.subUIs import tangents;   importlib.reload(tangents) 
+from aTools.animTools.animBar.subUIs.specialTools_subUIs import mirror;   importlib.reload(mirror) 
 
 Mirror = mirror.Mirror()
 
@@ -428,7 +430,7 @@ class KeyTransformSlider_Gui(object):
         radioSelected   = (self.getModeModifier(mode) == mod)
         cmds.menuItem(label="None", radioButton=radioSelected, command=lambda x, mode=mode, mod=mod, *args: self.setModifier(mode, mod), parent=menu)
         
-        for loopKey in self.defaultModifiers.keys():
+        for loopKey in list(self.defaultModifiers.keys()):
             
             mod             = loopKey
             label           = utilMod.toTitle(mod).replace(" ", "+")
@@ -453,7 +455,7 @@ class KeyTransformSlider_Gui(object):
     def setModifier(self, mode, mod):
         
         
-        for loopKey in self.defaultModifiers.keys():
+        for loopKey in list(self.defaultModifiers.keys()):
             if self.modifiers[loopKey] == mode:
                 self.modifiers[loopKey] = ""
             
@@ -466,7 +468,7 @@ class KeyTransformSlider_Gui(object):
         
     def loadDefaultModifiers(self, *args):
         
-        for loopMod in self.defaultModifiers.keys():
+        for loopMod in list(self.defaultModifiers.keys()):
             mode = self.defaultModifiers[loopMod]
             mod  = loopMod
             self.setModifier(mode, mod)
@@ -493,7 +495,7 @@ class KeyTransformSlider_Gui(object):
     
     def getModeModifier(self, mode, *args):        
          
-        for loopKey in self.defaultModifiers.keys():
+        for loopKey in list(self.defaultModifiers.keys()):
             if self.modifiers[loopKey] == mode:
                 return loopKey
             
@@ -503,7 +505,7 @@ class KeyTransformSlider_Gui(object):
         
         ann  = ""
         
-        for loopKey in self.defaultModifiers.keys():
+        for loopKey in list(self.defaultModifiers.keys()):
             loopMode = self.modifiers[loopKey]
             if loopMode != "": ann += "%s: %s\n"%(utilMod.toTitle(loopKey).replace(" ", "+"), utilMod.toTitle(loopMode))            
         
@@ -1050,7 +1052,7 @@ class KeyTransformSlider_Gui(object):
                 pivot = self.optimizedValues[loopCurve][f]
             
             if mode == "blendToDefault":
-                if not self.defaultValues.has_key(loopCurve):
+                if loopCurve not in self.defaultValues:
                     pivot                       = animMod.getDefaultValue(loopCurve)
                     self.defaultValues[loopCurve]  = pivot
                 else:
@@ -1066,7 +1068,7 @@ class KeyTransformSlider_Gui(object):
                     mirrorInvertValue           = Mirror.mirrorInvert(loopCurve, isCenterCurve, self.invertRules)
                   
             if mode == "scaleFromDefault": 
-                if not self.defaultValues.has_key(loopCurve):
+                if loopCurve not in self.defaultValues:
                     pivot                       = animMod.getDefaultValue(loopCurve)
                     self.defaultValues[loopCurve]  = pivot
                 else:
@@ -1346,7 +1348,7 @@ class KeyTransform(object):
         window = cmds.window(windowName, title="Set Inbetween", widthHeight=widthHeight)
         cmds.gridLayout(numberOfColumns=3, cellWidthHeight=(30, 30))
         
-        for n in xrange(9):
+        for n in range(9):
             num = n+1
             cmds.button(label=str(num), command=lambda num=num, *args: self.inbetween(num, "set"))
             

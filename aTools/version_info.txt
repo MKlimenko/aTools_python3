@@ -1,7 +1,7 @@
-aTools version 2.02
+aTools version 2.03
 
 Latest updates:
 
-v2.02
+v2.03
 
-Added animBot - the new Atools - menu. No new features.
+Switch to Python3 for newer Maya versions

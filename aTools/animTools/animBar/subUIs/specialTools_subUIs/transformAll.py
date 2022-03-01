@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -142,7 +143,7 @@ class TransformAll(object):
     def sendToSetValues(self, *args):  
         
         curveMsg                = args[0]
-        animCurves              = [OpenMaya.MFnDependencyNode(curveMsg[n]).name() for n in xrange(curveMsg.length())] 
+        animCurves              = [OpenMaya.MFnDependencyNode(curveMsg[n]).name() for n in range(curveMsg.length())] 
         
         if OpenMaya.MGlobal.isUndoing() or OpenMaya.MGlobal.isRedoing(): 
             self.updateCurrentValues(animCurves)
@@ -275,7 +276,7 @@ class TransformAll(object):
             
         #reset change        
         cmds.undoInfo(stateWithoutFlush=False)
-        for loopCurve in self.allValues.keys():  
+        for loopCurve in list(self.allValues.keys()):  
             if loopCurve in animCurves:          
                 valueChange = self.allValues[loopCurve]
                 for n, loopValue in enumerate(valueChange):

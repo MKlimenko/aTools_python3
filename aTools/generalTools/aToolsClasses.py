@@ -2,6 +2,7 @@
 ========================================================================================================================
 Author: Alan Camilo
 www.alancamilo.com
+Modified: Michael Klimenko
 
 Requirements: aTools Package
 
@@ -69,7 +70,7 @@ class DeferredManager(object):
         
     def printe(self, what):
         #pass
-        print what   
+        print(what)   
     
     def sendToQueue(self, function, priority=1, id="default"):            
 
@@ -93,14 +94,14 @@ class DeferredManager(object):
         priority        = sorted(self.queue)[0]
         
         if len(self.queue[priority]) > 0:
-            keys        = self.queue[priority].keys()
+            keys        = list(self.queue[priority].keys())
             id          = self.nextId or keys[0]
-            if not self.queue[priority].has_key(id): id = keys[0]
+            if id not in self.queue[priority]: id = keys[0]
             function    = self.queue[priority][id].pop(0)
             
             
             try: function()
-            except: print "aTools Deferred Manager Error#%s/%s: %s"%(priority, id, function)
+            except: print(("aTools Deferred Manager Error#%s/%s: %s"%(priority, id, function)))
             
             self.nextId = keys[0]            
             
@@ -109,7 +110,7 @@ class DeferredManager(object):
                 if index < len(keys)-1: self.nextId = keys[index+1]
                 else:                   self.nextId = keys[0] 
                     
-            if self.queue[priority].has_key(id) and len(self.queue[priority][id]) == 0: self.queue[priority].pop(id, None)
+            if id in self.queue[priority] and len(self.queue[priority][id]) == 0: self.queue[priority].pop(id, None)
         
         if len(self.queue[priority]) == 0: self.queue.pop(priority, None)
 
@@ -285,7 +286,7 @@ class CallbackManager(object):
 
         try:
             if cmds.scriptJob(exists=job):  cmds.scriptJob(kill=job, force=True)    
-        except:                             print("aTools CallbackManager could not remove job %s/%s/%s"%(id, type, job))
+        except:                             print(("aTools CallbackManager could not remove job %s/%s/%s"%(id, type, job)))
  
         
     def removeApiCallback(self, job, type, id):
@@ -299,14 +300,14 @@ class CallbackManager(object):
     
     def clearQueue(self):    
        
-        for loopId in self.queue.keys(): self.removeFromQueue(loopId)
+        for loopId in list(self.queue.keys()): self.removeFromQueue(loopId)
         
         
     def inQueue(self, id):        
         
         results = 0
         
-        for loopId in self.queue.keys():
+        for loopId in list(self.queue.keys()):
             
             if loopId == id: results += len(self.queue[id])
             
