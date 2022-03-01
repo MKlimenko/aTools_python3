@@ -20,6 +20,13 @@ from maya import cmds, mel\n\
 import os, shutil, urllib.request, urllib.error, urllib.parse, shutil, zipfile, importlib\n\
 \n\
 def hasInternet(url):\n\
+   try:\n\
+       proxy    = urllib.request.ProxyHandler({})\n\
+       opener   = urllib.request.build_opener(proxy)\n\
+       urllib.request.install_opener(opener)\n\
+       response = urllib.request.urlopen(url, timeout=60)\n\
+       return True\n\
+   except: pass\n\
    return False\n\
 \n\
 def launchInstall():\n\
@@ -38,7 +45,7 @@ def launchInstall():\n\
 def offlineInstallWindow():\n\
     windowName = 'aToolsOfflineInstallationWindow'\n\
     w = 500\n\
-    aToolsZipURL = 'http://camiloalan.wix.com/atoolswebsite#!other-side-of-the-firewall/c1t41'\n\
+    aToolsZipURL = 'https://github.com/MKlimenko/aTools_python3/releases/download/v2.03/aTools.zip'\n\
     delWindow(windowName)\n\
     window = cmds.window(windowName, title='aTools - Offline Installation')\n\
     form        = cmds.formLayout(numberOfDivisions=100)\n\
