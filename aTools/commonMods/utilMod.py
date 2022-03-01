@@ -505,7 +505,7 @@ def checkScriptJobEvents(onOff=True):
         
         for loopEvent in events: 
             if loopEvent not in ignore: 
-                G.checkScriptJobEventsJobs.append(cmds.scriptJob(runOnce = False, killWithScene = False, event =(loopEvent, "print 'Script Job Event: %s'"%loopEvent )))  
+                G.checkScriptJobEventsJobs.append(cmds.scriptJob(runOnce = False, killWithScene = False, event =(loopEvent, "print('Script Job Event: %s')"%loopEvent )))  
 
     
 def hasInternet(url):
