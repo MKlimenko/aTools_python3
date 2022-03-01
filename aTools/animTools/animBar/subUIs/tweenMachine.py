@@ -134,12 +134,11 @@ class TweenMachine(object):
             timelineTime    = None
             #keysSelMerged   = utilMod.mergeLists(keysSel)
             
-            
-           
-            # reverse order to get ease in and out smoothly
-            if 0 < percent <= 50 or percent == 100: 
-                for loopVal in keysSel:
-                    loopVal.reverse()
+            if isinstance(percent, int):
+                # reverse order to get ease in and out smoothly
+                if 0 < percent <= 50 or percent == 100: 
+                    for loopVal in keysSel:
+                        loopVal.reverse()
                     
             #utilMod.timer()
             
@@ -234,7 +233,7 @@ class TweenMachine(object):
                         cmds.keyframe(loopCurve, edit=True, time=loopTime, valueChange=value)
                         cmds.keyTangent(loopCurve, edit=True, time=loopTime, inTangentType=inTangentType, outTangentType=outTangentType)
                         #keycolor
-                        if 1 <= percent <= 99 or percent == "linear": cmds.keyframe(loopCurve ,edit=True,time=loopTime, tickDrawSpecial=self.getColoredKeys())
+                        if (isinstance(percent, int) and (1 <= percent <= 99)) or percent == "linear": cmds.keyframe(loopCurve ,edit=True,time=loopTime, tickDrawSpecial=self.getColoredKeys())
                     
     
                     
