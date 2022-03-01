@@ -1,0 +1,7 @@
+aTools version 2.02
+
+Latest updates:
+
+v2.02
+
+Added animBot - the new Atools - menu. No new features.

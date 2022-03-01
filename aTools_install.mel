@@ -1,0 +1,174 @@
+// ========================================================================================================================
+// Author: Alan Camilo
+// www.alancamilo.com
+// 
+// Requirements: aTools Package
+// 
+// ------------------------------------------------------------------------------------------------------------------------
+// To install aTools, please follow the instructions in the file how_to_install.txt
+// 
+// ------------------------------------------------------------------------------------------------------------------------
+// To unistall aTools, go to menu (the last button on the right), Uninstall
+// 
+// ========================================================================================================================
+
+python("\n\
+#aTools_install.mel\n\
+\n\
+from maya import cmds, mel\n\
+import os, shutil, urllib2, shutil, zipfile\n\
+\n\
+def hasInternet(url):\n\
+   try:\n\
+       proxy    = urllib2.ProxyHandler({})\n\
+       opener   = urllib2.build_opener(proxy)\n\
+       urllib2.install_opener(opener)\n\
+       response = urllib2.urlopen(url, timeout=60)\n\
+       return True\n\
+   except: pass\n\
+   return False\n\
+\n\
+def launchInstall():\n\
+    INSTALL_URL = 'http://www.trickorscript.com/aTools/aToolsInstall.py' \n\
+    aToolsInstall = None\n\
+    if hasInternet(INSTALL_URL):\n\
+	    try: \n\
+	        aToolsInstall = urllib2.urlopen(INSTALL_URL, timeout=60).read()\n\
+	    except IOError: pass\n\
+    if aToolsInstall: exec(aToolsInstall)\n\
+    else: \n\
+        cmds.confirmDialog(title=\"aTools Install\", message=\"Internet connection not detected, offline installation will begin.\\n\\nIf you want aTools to auto update in the future, configure your firewall so that Maya can access the internet.\", button=\"Next\")\n\
+        offlineInstallWindow()\n\
+\n\
+\n\
+def offlineInstallWindow():\n\
+    windowName = 'aToolsOfflineInstallationWindow'\n\
+    w = 500\n\
+    aToolsZipURL = 'http://camiloalan.wix.com/atoolswebsite#!other-side-of-the-firewall/c1t41'\n\
+    delWindow(windowName)\n\
+    window = cmds.window(windowName, title='aTools - Offline Installation')\n\
+    form        = cmds.formLayout(numberOfDivisions=100)\n\
+    pos         = 10    \n\
+    elements = []    \n\
+    elements.append([cmds.text( label='aTools - Offline Installation Instructions:', font='boldLabelFont'), 0])\n\
+    elements.append([cmds.text(label=\'1) Download <a href=\\'%s\\'>aTools.zip</a>\'%aToolsZipURL, align='left', hyperlink=True), 30])\n\
+    elements.append([cmds.text(label=\'In case you don\\'t have internet access at all, use the link below somewhere else.\', align='left'), 15])\n\
+    elements.append([cmds.textField(text=aToolsZipURL, w=w-20, editable=False), 20])\n\
+    elements.append([cmds.text(label=\'2) Create a folder for aTools.zip and keep the file there, aTools will remember this\\nlocation to install updates automatically. All you\\'ll need to do is replace aTools.zip when\\nnew versions come out. Subscribe in the above link to receive alerts.\', align='left'), 40])\n\
+    elements.append([cmds.text(label=\'If more people in your network are going to install aTools, place aTools.zip in a folder that\\neveryone has access to, so only one person will need to keep aTools.zip up-to-date.\', align='left'), 45])\n\
+    elements.append([cmds.text(label='3) OK, so where did you put it?', align='left'), 45])\n\
+    elements.append([cmds.rowLayout(numberOfColumns=3), 20])\n\
+    cmds.textField('aToolsZipField', text='...aTools.zip', w=w-85)\n\
+    cmds.button(label='Browse', command=browse, w=60)\n\
+    cmds.setParent('..')\n\
+    elements.append([cmds.button( label='Install aTools', w=150, command=lambda *args:install(windowName)), 30])\n\
+    \n\
+    for loopElement in elements:\n\
+        element = loopElement[0]\n\
+        pos     += loopElement[1]\n\
+        cmds.formLayout(form, edit=True, attachForm=[(element, 'top', pos), (element, 'left', 10)] )\n\
+        \n\
+    cmds.showWindow(window)    \n\
+    cmds.window(windowName, edit=True, widthHeight=(w, pos+40))\n\
+    \n\
+    \n\
+def browse(*args):\n\
+    result = cmds.fileDialog2(fileFilter='aTools.zip', dialogStyle=2, fileMode=1, okCaption='OK')\n\
+    if result: cmds.textField('aToolsZipField', edit=True, text=result[0])\n\
+\n\
+def install(windowName):\n\
+    offlineFilePath = formatPath(cmds.textField('aToolsZipField', query=True, text=True))\n\
+    if offlineFilePath.split(os.sep)[-1] != 'aTools.zip':\n\
+        cmds.confirmDialog(message='Only aTools.zip is acceptable. Rename the file if needed.')\n\
+        return\n\
+    if not os.path.isfile(offlineFilePath): \n\
+        cmds.confirmDialog(message=\'Couldn\\'t find aTools.zip in there, please check if the path is correct.\')\n\
+        return\n\
+    delWindow(windowName)\n\
+    aToolsOfflineInstall(offlineFilePath)\n\
+    \n\
+def delWindow(windowName):\n\
+    if cmds.window(windowName, query=True, exists=True): cmds.deleteUI(windowName)\n\
+\n\
+\n\
+\n\
+def formatPath(path):\n\
+    path = path.replace('/', os.sep)\n\
+    path = path.replace('\\\\', os.sep)\n\
+    return path\n\
+\n\
+def download(downloadUrl, saveFile):\n\
+        \n\
+    try:    response        = urllib2.urlopen(downloadUrl, timeout=60)          \n\
+    except: pass\n\
+    \n\
+    if response is None: \n\
+        cmds.warning('Error trying to install.')\n\
+        return    \n\
+    \n\
+    fileSize        = int(response.info().getheaders('Content-Length')[0])\n\
+    fileSizeDl      = 0\n\
+    blockSize       = 128\n\
+    output          = open(saveFile,'wb')    \n\
+    progBar         = mel.eval('$tmp = $gMainProgressBar')    \n\
+    \n\
+    cmds.progressBar( progBar,\n\
+                        edit=True,\n\
+                        beginProgress=True,\n\
+                        status='Downloading aTools...',\n\
+                        progress=0,\n\
+                        maxValue=100 )    \n\
+    \n\
+    while True:\n\
+        buffer = response.read(blockSize)\n\
+        if not buffer:\n\
+            output.close()\n\
+            cmds.progressBar(progBar, edit=True, progress=100)  \n\
+            cmds.progressBar(progBar, edit=True, endProgress=True)          \n\
+            break\n\
+    \n\
+        fileSizeDl += len(buffer)\n\
+        output.write(buffer)\n\
+        p = float(fileSizeDl) / fileSize *100\n\
+        \n\
+        cmds.progressBar(progBar, edit=True, progress=p)  \n\
+        \n\
+    return output\n\
+\n\
+\n\
+def aToolsOfflineInstall(offlineFilePath):\n\
+\n\
+    mayaAppDir      = mel.eval('getenv MAYA_APP_DIR')    \n\
+    aToolsPath      = mayaAppDir + os.sep + 'scripts'\n\
+    aToolsFolder    = aToolsPath + os.sep + 'aTools' + os.sep\n\
+    tmpZipFile      = '%s%stmp.zip'%(aToolsPath, os.sep)\n\
+    offlineFileUrl  = r'file:///%s'%offlineFilePath\n\
+        \n\
+    if os.path.isfile(tmpZipFile):     os.remove(tmpZipFile)   \n\
+    if os.path.isdir(aToolsFolder): shutil.rmtree(aToolsFolder)      \n\
+    \n\
+    output = download(offlineFileUrl, tmpZipFile)    \n\
+    \n\
+    zfobj = zipfile.ZipFile(tmpZipFile)\n\
+    for name in zfobj.namelist():\n\
+        uncompressed = zfobj.read(name)\n\
+    \n\
+        filename  = formatPath('%s%s%s'%(aToolsPath, os.sep, name))        \n\
+        d         = os.path.dirname(filename)\n\
+        \n\
+        if not os.path.exists(d): os.makedirs(d)\n\
+        if filename.endswith(os.sep): continue\n\
+        \n\
+        output = open(filename,'wb')\n\
+        output.write(uncompressed)\n\
+        output.close()\n\
+        \n\
+    zfobj.close()\n\
+    if os.path.isfile(tmpZipFile):     os.remove(tmpZipFile)\n\
+    from aTools import setup; reload(setup); setup.install([offlineFilePath, True]) \n\
+    cmds.confirmDialog(message=\'A file aTools_offline_install.mel has been created in the same aTools.zip location. If other people in your network are installing aTools, just ask them to drag\\'n drop this file into Maya\\'s viewport.\')\n\
+    cmds.evalDeferred(\"from aTools.animTools.animBar import animBarUI; reload(animBarUI); animBarUI.show(\\'refresh\\')\")     \n\
+\n\
+\n\
+launchInstall()\n\
+");

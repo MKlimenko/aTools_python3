@@ -1,0 +1,3 @@
+How to install aTools:
+
+Just drag the file "aTools_install.mel" into maya's viewport.
