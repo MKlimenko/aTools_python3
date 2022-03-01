@@ -40,7 +40,7 @@ def getTarget(target, animCurves=None, getFrom=None, rangeAll=None):
                     if target == "keysIndexSel":    keysSel.append(cmds.keyframe(node, selected=True, query=True, indexValue=True))
             else:
                 if rangeAll is None:               
-                    range    = getTimelineRange() 
+                    timeline_range    = getTimelineRange() 
                     
                 allKeys      = [cmds.keyframe(node, query=True, timeChange=True) for node in animCurves if cmds.objExists(node)]
                 allIndexKeys = [cmds.keyframe(node, query=True, indexValue=True) for node in animCurves if cmds.objExists(node)]
@@ -50,7 +50,7 @@ def getTarget(target, animCurves=None, getFrom=None, rangeAll=None):
                     if loopKeyArrays:
                         for nn, loopKey in enumerate(loopKeyArrays):
                             
-                            if rangeAll or range[0] <= loopKey < range[1]:
+                            if rangeAll or timeline_range[0] <= loopKey < timeline_range[1]:
                                 if target == "keysSel":         keysSel[n].append(loopKey)
                                 if target == "keysIndexSel":    keysSel[n].append(allIndexKeys[n][nn])
                           
@@ -391,12 +391,12 @@ def getTimelineRange(float=True):
     #if G.lastCurrentFrame == cmds.currentTime(query=True): return G.lastRange
         
     G.playBackSliderPython  = G.playBackSliderPython or mel.eval('$aTools_playBackSliderPython=$gPlayBackSlider')
-    range                   = cmds.timeControl(G.playBackSliderPython, query=True, rangeArray=True)
-    if float: range[1]      -= .0001
-    #G.lastRange        = range
+    timeline_range                   = cmds.timeControl(G.playBackSliderPython, query=True, rangeArray=True)
+    if float: timeline_range[1]      -= .0001
+    #G.lastRange        = timeline_range
     #G.lastCurrentFrame = cmds.currentTime(query=True)
     
-    return range    
+    return timeline_range    
 
 def getTimelineTime():
     timelineTime = cmds.currentTime(query=True);  timelineTime = (timelineTime, timelineTime)
