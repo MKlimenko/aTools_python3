@@ -248,7 +248,8 @@ class GeneralTools_Gui(uiMod.BaseSubUI):
         G.playBackSliderPython  = G.playBackSliderPython or mel.eval('$aTools_playBackSliderPython=$gPlayBackSlider')
         cmds.timeControl(G.playBackSliderPython, edit=True, showKeys="mainChannelBox", showKeysCombined=True, animLayerFilterOptions="active") 
         #tickDrawSpecial Color
-        cmds.displayRGBColor('timeSliderTickDrawSpecial',1,1,.4)
+        # seems to fail on maya 2024
+        # cmds.displayRGBColor('timeSliderTickDrawSpecial',1,1,.4)
         
         
         

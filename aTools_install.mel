@@ -45,7 +45,7 @@ def launchInstall():\n\
 def offlineInstallWindow():\n\
     windowName = 'aToolsOfflineInstallationWindow'\n\
     w = 500\n\
-    aToolsZipURL = 'https://github.com/MKlimenko/aTools_python3/releases/download/v2.03/aTools.zip'\n\
+    aToolsZipURL = 'https://github.com/MKlimenko/aTools_python3/releases/download/v2.04/aTools.zip'\n\
     delWindow(windowName)\n\
     window = cmds.window(windowName, title='aTools - Offline Installation')\n\
     form        = cmds.formLayout(numberOfDivisions=100)\n\
